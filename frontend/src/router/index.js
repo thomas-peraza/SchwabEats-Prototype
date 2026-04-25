@@ -8,6 +8,8 @@ import CheckoutView from '../views/CheckoutView.vue'
 import OrderConfirmationView from '../views/OrderConfirmationView.vue'
 import VendorDashboardView from '../views/VendorDashboardView.vue'
 import VendorOrdersView from '../views/VendorOrdersView.vue'
+import VendorMenuView from '../views/VendorMenuView.vue'
+import VendorReportsView from '../views/VendorReportsView.vue'
 
 const routes = [
   { path: '/', name: 'login', component: LoginView },
@@ -18,7 +20,11 @@ const routes = [
   { path: '/checkout', name: 'checkout', component: CheckoutView },
   { path: '/order-confirmation', name: 'order-confirmation', component: OrderConfirmationView },
   { path: '/vendor-dashboard', name: 'vendor-dashboard', component: VendorDashboardView },
-  { path: '/vendor-orders', name: 'vendor-orders', component: VendorOrdersView }
+  { path: '/vendor-orders', name: 'vendor-orders', component: VendorOrdersView },
+  { path: '/vendor-dashboard', name: 'vendor-dashboard', component: VendorDashboardView },
+  { path: '/vendor-orders', name: 'vendor-orders', component: VendorOrdersView },
+  { path: '/vendor-menu', name: 'vendor-menu', component: VendorMenuView },
+  { path: '/vendor-reports', name: 'vendor-reports', component: VendorReportsView },
 ]
 
 const router = createRouter({
