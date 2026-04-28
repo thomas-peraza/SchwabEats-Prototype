@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
 import LoginView from '../views/LoginView.vue'
 import EmployeeDashboardView from '../views/EmployeeDashboardView.vue'
 import VendorsView from '../views/VendorsView.vue'
@@ -19,12 +20,11 @@ const routes = [
   { path: '/cart', name: 'cart', component: CartView },
   { path: '/checkout', name: 'checkout', component: CheckoutView },
   { path: '/order-confirmation', name: 'order-confirmation', component: OrderConfirmationView },
-  { path: '/vendor-dashboard', name: 'vendor-dashboard', component: VendorDashboardView },
-  { path: '/vendor-orders', name: 'vendor-orders', component: VendorOrdersView },
+
   { path: '/vendor-dashboard', name: 'vendor-dashboard', component: VendorDashboardView },
   { path: '/vendor-orders', name: 'vendor-orders', component: VendorOrdersView },
   { path: '/vendor-menu', name: 'vendor-menu', component: VendorMenuView },
-  { path: '/vendor-reports', name: 'vendor-reports', component: VendorReportsView },
+  { path: '/vendor-reports', name: 'vendor-reports', component: VendorReportsView }
 ]
 
 const router = createRouter({
