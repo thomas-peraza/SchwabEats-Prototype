@@ -1,9 +1,9 @@
 <template>
   <div class="min-h-screen bg-white text-[#4a4a4a]">
-    <div class="border border-[#1FABFF] bg-white">
+    <div class="border border-[#1FABFF] bg-sky-700 rounded-sm">
       <div class="flex items-center justify-between px-4 py-3">
         <div>
-          <h1 class="text-[2rem] font-semibold leading-none">Vendor Portal</h1>
+          <h1 class="text-[2rem] text-white font-semibold leading-none">Vendor Portal</h1>
         </div>
       </div>
     </div>
@@ -12,13 +12,10 @@
       <div class="flex items-start justify-between">
         <div>
           <h2 class="text-3xl font-medium leading-none">Restaurant Name</h2>
-          <p class="text-2xl mt-1">Logged in as: Vendor Manager</p>
+          <p class="text-xl mt-1">Vendor Manager</p>
         </div>
-        <img
-          src="https://images.unsplash.com/photo-1551782450-a2132b4ba21d?auto=format&fit=crop&w=300&q=80"
-          alt="Restaurant Logo"
-          class="w-32 h-20 object-cover border-2 border-black"
-        />
+        <img src="https://images.unsplash.com/photo-1551782450-a2132b4ba21d?auto=format&fit=crop&w=300&q=80"
+          alt="Restaurant Logo" class="w-32 h-20 object-cover border-2 border-black" />
       </div>
     </div>
 
@@ -26,28 +23,29 @@
       <h3 class="text-2xl mb-2">Navigation</h3>
 
       <div class="flex gap-3 flex-wrap mb-4">
-        <router-link to="/vendor-dashboard" class="bg-[#1FABFF] text-white px-8 py-3 rounded-md text-xl">Dashboard</router-link>
-        <router-link to="/vendor-orders" class="bg-[#1FABFF] text-white px-8 py-3 rounded-md text-xl">Orders</router-link>
-        <router-link to="/vendor-menu" class="bg-[#1FABFF] text-white px-8 py-3 rounded-md text-xl">Menu</router-link>
-        <router-link to="/vendor-reports" class="bg-[#1FABFF] text-white px-8 py-3 rounded-md text-xl">Reports</router-link>
+        <router-link to="/vendor-dashboard"
+          class="bg-sky-200 text-slate-800 px-8 py-3 rounded-md text-xl active:scale-95 transition-transform duration-150">Dashboard</router-link>
+        <router-link to="/vendor-orders"
+          class="bg-sky-200 text-slate-800 px-8 py-3 rounded-md text-xl active:scale-95 transition-transform duration-150">Orders</router-link>
+        <router-link to="/vendor-menu"
+          class="bg-sky-200 text-slate-800 px-8 py-3 rounded-md text-xl active:scale-95 transition-transform duration-150">Menu</router-link>
+        <router-link to="/vendor-reports"
+          class="bg-sky-200 text-slate-800 px-8 py-3 rounded-md text-xl active:scale-95 transition-transform duration-150">Reports</router-link>
       </div>
     </div>
 
     <div class="px-4 pb-8">
       <h3 class="text-3xl mb-1">Active Orders</h3>
 
-      <div class="grid grid-cols-[1fr_3fr_2fr_2fr] border border-gray-400 bg-[#EAF5FB] px-3 py-2 text-2xl">
+      <div class="grid grid-cols-[1fr_3fr_2fr_2fr] bg-[#EAF5FB] px-3 py-2 text-2xl">
         <div>Order ID</div>
         <div>Items</div>
         <div>Status</div>
         <div>Action</div>
       </div>
 
-      <div
-        v-for="order in vendorOrders"
-        :key="order.id"
-        class="grid grid-cols-[1fr_3fr_2fr_2fr] border border-gray-400 bg-[#EAF5FB] px-3 py-4 mt-2 min-h-[150px] items-center"
-      >
+      <div v-for="order in vendorOrders" :key="order.id"
+        class="grid grid-cols-[1fr_3fr_2fr_2fr] bg-[#EAF5FB] px-3 py-4 mt-2 min-h-37.5 items-center">
         <div class="text-2xl">{{ order.id }}</div>
 
         <div class="pr-8 text-lg leading-snug max-w-md">
@@ -57,24 +55,18 @@
           <p class="mt-3 font-semibold">Total: ${{ order.total.toFixed(2) }}</p>
         </div>
 
-        <div class="flex flex-col items-start gap-3">
-          <div class="text-2xl">{{ order.status }}</div>
+        <div class="flex flex-col items-start gap-2">
+          <div class="text-xl">{{ order.status }}</div>
 
           <div class="w-44 h-5 border border-gray-600 bg-white overflow-hidden">
-            <div
-              class="h-full"
-              :class="getProgressColor(order.status)"
-              :style="{ width: getProgressWidth(order.status) }"
-            ></div>
+            <div class="h-full" :class="getProgressColor(order.status)"
+              :style="{ width: getProgressWidth(order.status) }"></div>
           </div>
         </div>
 
         <div class="flex flex-col items-start gap-3">
-          <select
-            class="border border-gray-500 bg-white px-3 py-2 text-xl"
-            :value="order.status"
-            @change="handleStatusChange(order, $event.target.value)"
-          >
+          <select class=" bg-white px-4 py-1 text-xl rounded-md" :value="order.status"
+            @change="handleStatusChange(order, $event.target.value)">
             <option>Accepted</option>
             <option>Preparing</option>
             <option>Ready</option>
@@ -83,25 +75,20 @@
       </div>
     </div>
 
-    <div
-      v-if="showCompletePopup"
-      class="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
-    >
+    <div v-if="showCompletePopup" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div class="bg-white border border-gray-500 rounded-md p-8 w-[400px] text-center shadow-lg">
         <h2 class="text-3xl mb-6">Is this order complete?</h2>
 
         <div class="flex justify-center gap-4">
           <button
-            class="bg-[#1FABFF] text-white px-8 py-3 rounded-md text-xl"
-            @click="confirmComplete"
-          >
+            class="bg-[#1FABFF] text-white px-8 py-3 rounded-md text-xl active:scale-95 transition-transform duration-150"
+            @click="confirmComplete">
             Yes
           </button>
 
           <button
-            class="bg-gray-200 text-[#4a4a4a] px-8 py-3 rounded-md text-xl"
-            @click="cancelComplete"
-          >
+            class="bg-gray-200 text-[#4a4a4a] px-8 py-3 rounded-md text-xl active:scale-95 transition-transform duration-150"
+            @click="cancelComplete">
             No
           </button>
         </div>
@@ -169,9 +156,9 @@ function getProgressWidth(status) {
 }
 
 function getProgressColor(status) {
-  if (status === 'Accepted') return 'bg-[#FFBB00]'
-  if (status === 'Preparing') return 'bg-[#FFE500]'
-  if (status === 'Ready') return 'bg-[#136315]'
+  if (status === 'Accepted') return 'bg-[#44555F]'
+  if (status === 'Preparing') return 'bg-[#44555F]'
+  if (status === 'Ready') return 'bg-[#44555F]'
   return 'bg-gray-300'
 }
 
@@ -203,6 +190,14 @@ function confirmComplete() {
   currentReports.revenue += completedOrder.total
 
   localStorage.setItem('vendorReports', JSON.stringify(currentReports))
+
+  const currentItemSales = JSON.parse(localStorage.getItem('vendorItemSales')) || {}
+
+  completedOrder.items.forEach((item) => {
+    currentItemSales[item] = (currentItemSales[item] || 0) + 1
+  })
+
+  localStorage.setItem('vendorItemSales', JSON.stringify(currentItemSales))
 
   vendorOrders.value = vendorOrders.value.filter(
     (order) => order.id !== completedOrder.id

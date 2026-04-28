@@ -1,52 +1,92 @@
 <template>
-  <div>
-    <h1 class="text-3xl font-bold">Checkout</h1>
-    <p class="text-slate-500 mt-2">Review your delivery details and place the order.</p>
+  <div class="min-h-screen bg-gray-100 text-slate-800 px-4 py-6">
+    <div class="max-w-5xl mx-auto">
+      <h1 class="text-4xl font-bold text-sky-700 mb-2">Checkout</h1>
+      <p class="text-slate-500 mb-8">Confirm your delivery information.</p>
 
-    <div class="grid lg:grid-cols-[2fr_1fr] gap-8 mt-8">
-      <form class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4" @submit.prevent="handleSubmit">
-        <div>
-          <label class="block text-sm font-medium mb-1">Employee Name</label>
-          <input v-model="form.name" class="w-full border rounded-lg px-4 py-2" placeholder="Thomas Peraza" />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium mb-1">Office Location</label>
-          <input v-model="form.location" class="w-full border rounded-lg px-4 py-2" placeholder="Schwab Campus - Building A" />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium mb-1">Delivery Notes</label>
-          <textarea
-            v-model="form.notes"
-            class="w-full border rounded-lg px-4 py-2"
-            rows="4"
-            placeholder="Leave order at the front desk."
-          />
-        </div>
-
-        <button
-          type="submit"
-          class="bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700"
+      <div class="grid lg:grid-cols-[2fr_1fr] gap-8">
+        <form
+          class="bg-white rounded-2xl shadow-xl p-6 space-y-5"
+          @submit.prevent="placeOrder"
         >
-          Place Order
-        </button>
-      </form>
+          <div>
+            <label class="block text-sm font-semibold mb-2">Employee Name</label>
+            <input
+              v-model="form.name"
+              class="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-400"
+              placeholder="Thomas Peraza"
+            />
+          </div>
 
-      <CartSummary :item-count="itemCount" :subtotal="subtotal" />
+          <div>
+            <label class="block text-sm font-semibold mb-2">Delivery Location</label>
+            <input
+              v-model="form.location"
+              class="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-400"
+              placeholder="Schwab Campus - Building A"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold mb-2">Delivery Notes</label>
+            <textarea
+              v-model="form.notes"
+              class="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-400"
+              rows="4"
+              placeholder="Leave at pickup table."
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-sky-200 text-slate-900 border border-sky-300 py-3 rounded-xl hover:bg-sky-300 active:scale-95 transition-transform duration-150"
+          >
+            Place Order
+          </button>
+        </form>
+
+        <aside class="bg-white rounded-2xl shadow-xl p-6 h-fit">
+          <h2 class="text-2xl font-semibold mb-5">Final Summary</h2>
+
+          <div class="space-y-3 text-lg">
+            <div class="flex justify-between">
+              <span>Subtotal:</span>
+              <span>${{ subtotal.toFixed(2) }}</span>
+            </div>
+
+            <div class="flex justify-between text-green-700">
+              <span>Subsidy (80%):</span>
+              <span>- ${{ subsidy.toFixed(2) }}</span>
+            </div>
+
+            <div class="flex justify-between">
+              <span>Co-Pay:</span>
+              <span>${{ copay.toFixed(2) }}</span>
+            </div>
+
+            <div class="flex justify-between">
+              <span>Taxes:</span>
+              <span>${{ taxes.toFixed(2) }}</span>
+            </div>
+
+            <div class="border-t pt-4 mt-4 flex justify-between text-2xl font-bold">
+              <span>Total:</span>
+              <span>${{ total.toFixed(2) }}</span>
+            </div>
+          </div>
+        </aside>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import CartSummary from '../components/CartSummary.vue'
 import { useCart } from '../composables/useCart'
-import { submitOrder } from '../services/orderService'
 
 const router = useRouter()
-const { cartItems, itemCount, subtotal, clearCart } = useCart()
+const { cartItems, subtotal, clearCart } = useCart()
 
 const form = reactive({
   name: '',
@@ -54,18 +94,22 @@ const form = reactive({
   notes: ''
 })
 
-async function handleSubmit() {
-  const result = await submitOrder({
-    customer: form,
-    items: cartItems.value,
-    total: subtotal.value
-  })
+const subsidy = computed(() => subtotal.value * 0.8)
+const copay = computed(() => (cartItems.value.length > 0 ? 5 : 0))
+const taxableAmount = computed(() => subtotal.value - subsidy.value + copay.value)
+const taxes = computed(() => taxableAmount.value * 0.0825)
+const total = computed(() => taxableAmount.value + taxes.value)
+
+function placeOrder() {
+  const orderNumber = Math.floor(10000000 + Math.random() * 90000000)
 
   clearCart()
 
   router.push({
     path: '/order-confirmation',
-    query: { orderNumber: result.orderNumber }
+    query: {
+      orderNumber
+    }
   })
 }
 </script>
