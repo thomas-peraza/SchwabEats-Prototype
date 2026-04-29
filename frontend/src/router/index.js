@@ -24,7 +24,8 @@ const routes = [
   { path: '/vendor-dashboard', name: 'vendor-dashboard', component: VendorDashboardView },
   { path: '/vendor-orders', name: 'vendor-orders', component: VendorOrdersView },
   { path: '/vendor-menu', name: 'vendor-menu', component: VendorMenuView },
-  { path: '/vendor-reports', name: 'vendor-reports', component: VendorReportsView }
+  { path: '/vendor-reports', name: 'vendor-reports', component: VendorReportsView },
+  { path: '/', name: 'login', component: LoginView }
 ]
 
 const router = createRouter({

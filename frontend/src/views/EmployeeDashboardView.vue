@@ -4,7 +4,7 @@
       <header class="bg-white rounded-2xl shadow-lg p-6 mb-6 flex items-center justify-between">
         <div>
           <h1 class="text-4xl font-bold text-sky-700">SchwabEats</h1>
-          <p class="text-slate-500 mt-1">Employee Ordering Portal</p>
+          <p class="text-slate-500 mt-1">Employee Dashboard</p>
         </div>
 
         <router-link to="/cart"
