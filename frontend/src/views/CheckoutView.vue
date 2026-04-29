@@ -1,48 +1,41 @@
 <template>
   <div class="min-h-screen bg-gray-100 text-slate-800 px-4 py-6">
     <div class="max-w-5xl mx-auto">
+      <router-link to="/cart"
+        class="inline-block mb-6 bg-white shadow-md px-5 py-3 rounded-xl hover:shadow-lg active:scale-95 transition-transform duration-150">
+        ← Back to Cart
+      </router-link>
       <h1 class="text-4xl font-bold text-sky-700 mb-2">Checkout</h1>
       <p class="text-slate-500 mb-8">Confirm your delivery information.</p>
 
       <div class="grid lg:grid-cols-[2fr_1fr] gap-8">
-        <form
-          class="bg-white rounded-2xl shadow-xl p-6 space-y-5"
-          @submit.prevent="placeOrder"
-        >
+        <form class="bg-white rounded-2xl shadow-xl p-6 space-y-5" @submit.prevent="placeOrder">
           <div>
             <label class="block text-sm font-semibold mb-2">Employee Name</label>
-            <input
-              v-model="form.name"
+            <input v-model="form.name"
               class="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-400"
-              placeholder="Thomas Peraza"
-              required
-            />
+              placeholder="Employee name" required />
           </div>
 
           <div>
             <label class="block text-sm font-semibold mb-2">Delivery Location</label>
-            <input
-              v-model="form.location"
-              class="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-400"
-              placeholder="Schwab Campus - Building A"
-              required
-            />
+            <select v-model="form.location"
+              class="w-full border border-slate-300 rounded-xl px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
+              required>
+              <option disabled value="">Select Schwab location</option>
+              <option>Dallas-Park Cities Branch</option>
+            </select>
           </div>
 
           <div>
             <label class="block text-sm font-semibold mb-2">Delivery Notes</label>
-            <textarea
-              v-model="form.notes"
+            <textarea v-model="form.notes"
               class="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-400"
-              rows="4"
-              placeholder="Leave at pickup table."
-            ></textarea>
+              rows="4" placeholder="Leave at pickup table."></textarea>
           </div>
 
-          <button
-            type="submit"
-            class="w-full bg-sky-200 text-slate-900 border border-sky-300 py-3 rounded-xl hover:bg-sky-300 active:scale-95 transition-transform duration-150"
-          >
+          <button type="submit"
+            class="w-full bg-sky-200 text-slate-900 border border-sky-300 py-3 rounded-xl hover:bg-sky-300 active:scale-95 transition-transform duration-150">
             Place Order
           </button>
         </form>

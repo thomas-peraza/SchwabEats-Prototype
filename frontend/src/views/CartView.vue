@@ -3,7 +3,7 @@
     <div class="max-w-6xl mx-auto">
       <router-link to="/employee"
         class="inline-block mb-6 bg-white shadow-md px-5 py-3 rounded-xl hover:shadow-lg active:scale-95 transition-transform duration-150">
-        ← Back to Restaurants
+        ← Back to Dashboard
       </router-link>
       <h1 class="text-4xl font-bold text-sky-700 mb-2">Your Cart</h1>
       <p class="text-slate-500 mb-8">Review your selected items before checkout.</p>

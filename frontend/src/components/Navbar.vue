@@ -24,13 +24,6 @@
           <!-- No navigation buttons -->
         </template>
 
-        <!-- DEFAULT (fallback, rarely used) -->
-        <template v-else>
-          <router-link to="/employee" class="hover:text-sky-200">Employee</router-link>
-          <router-link to="/vendors" class="hover:text-sky-200">Vendors</router-link>
-          <router-link to="/vendor-dashboard" class="hover:text-sky-200">Vendor Portal</router-link>
-        </template>
-
         <!-- LOGOUT ALWAYS VISIBLE -->
         <button
           class="ml-4 bg-sky-200 text-[#455A64] hover:bg-white px-4 py-2 rounded-lg active:scale-95 transition-transform duration-150"
