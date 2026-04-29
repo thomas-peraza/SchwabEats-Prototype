@@ -15,6 +15,7 @@
               v-model="form.name"
               class="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-400"
               placeholder="Thomas Peraza"
+              required
             />
           </div>
 
@@ -24,6 +25,7 @@
               v-model="form.location"
               class="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-400"
               placeholder="Schwab Campus - Building A"
+              required
             />
           </div>
 
@@ -101,7 +103,26 @@ const taxes = computed(() => taxableAmount.value * 0.0825)
 const total = computed(() => taxableAmount.value + taxes.value)
 
 function placeOrder() {
-  const orderNumber = Math.floor(10000000 + Math.random() * 90000000)
+  const orderNumber = String(Math.floor(10000000 + Math.random() * 90000000))
+
+  const newOrder = {
+    id: orderNumber,
+    employeeName: form.name,
+    location: form.location,
+    notes: form.notes,
+    items: cartItems.value.map((item) => ({
+      name: item.name,
+      quantity: item.quantity,
+      price: item.price
+    })),
+    total: total.value,
+    status: 'Accepted'
+  }
+
+  const existingOrders = JSON.parse(localStorage.getItem('vendorOrders')) || []
+  existingOrders.push(newOrder)
+
+  localStorage.setItem('vendorOrders', JSON.stringify(existingOrders))
 
   clearCart()
 

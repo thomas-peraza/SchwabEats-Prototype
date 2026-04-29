@@ -18,14 +18,7 @@
           to="/employee"
           class="bg-sky-200 text-slate-900 border border-sky-300 px-6 py-3 rounded-xl hover:bg-sky-300 active:scale-95 transition-transform duration-150"
         >
-          Order Again
-        </router-link>
-
-        <router-link
-          to="/cart"
-          class="bg-slate-900 text-white px-6 py-3 rounded-xl hover:bg-slate-700 active:scale-95 transition-transform duration-150"
-        >
-          View Cart
+          Go back to Dashboard
         </router-link>
       </div>
     </div>
