@@ -29,5 +29,5 @@
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const orderNumber = route.query.orderNumber || '00000000'
+const orderNumber = route.query.orderNumber || route.query.orderId || '00000000'
 </script>

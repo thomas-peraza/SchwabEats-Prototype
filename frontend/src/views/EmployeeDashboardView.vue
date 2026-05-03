@@ -156,9 +156,10 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCart } from '../composables/useCart'
+import { getRankedVendorCatalog, getRecommendedVendors } from '../services/recommendationService'
 
 const router = useRouter()
 const { itemCount } = useCart()
@@ -203,7 +204,7 @@ const restaurants = [
 ]
 
 const pastOrders = [restaurants[0], restaurants[2], restaurants[1]]
-const recommendedRestaurants = [restaurants[1], restaurants[0], restaurants[2]]
+const recommendedRestaurants = ref([restaurants[1], restaurants[0], restaurants[2]])
 
 const activeSearchText = computed(() => {
   return searchQuery.value.trim().toLowerCase()
@@ -224,6 +225,21 @@ const filteredPastOrders = computed(() => {
 
 const filteredRestaurants = computed(() => {
   return restaurants.filter((restaurant) => matchesFilters(restaurant))
+})
+
+onMounted(async () => {
+  try {
+    const recommended = await getRecommendedVendors()
+    recommendedRestaurants.value = recommended.length > 0 ? recommended : restaurants.slice(0, 3)
+
+    const rankedCatalog = await getRankedVendorCatalog()
+    if (!isFiltering.value && rankedCatalog.length > 0) {
+      // Keep the recommended rail aligned with the backend-ranked catalog.
+      recommendedRestaurants.value = rankedCatalog.slice(0, 3)
+    }
+  } catch {
+    recommendedRestaurants.value = restaurants.slice(0, 3)
+  }
 })
 
 function matchesFilters(restaurant) {

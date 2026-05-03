@@ -12,11 +12,11 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import VendorCard from '../components/VendorCard.vue'
-import { getVendors } from '../services/vendorService'
+import { getRankedVendorCatalog } from '../services/recommendationService'
 
 const vendors = ref([])
 
 onMounted(async () => {
-  vendors.value = await getVendors()
+  vendors.value = await getRankedVendorCatalog()
 })
 </script>

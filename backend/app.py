@@ -4,6 +4,7 @@ from datetime import datetime
 from uuid import uuid4
 
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 from zoneinfo import ZoneInfo
@@ -16,6 +17,7 @@ from recommendation.recommender import RecommendationRequest, VendorRecommender
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 eligibility_checker = EligibilityChecker()
 hard_filter_engine = HardFilterEngine()
