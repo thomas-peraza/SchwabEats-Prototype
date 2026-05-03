@@ -6,16 +6,27 @@
           <h1 class="text-4xl font-bold text-sky-700">SchwabEats</h1>
           <p class="text-slate-500 mt-1">Employee Dashboard</p>
         </div>
+        <div class="flex items-center gap-4">
 
-        <router-link to="/cart"
-          class="relative text-4xl bg-sky-100 hover:bg-sky-200 rounded-full w-16 h-16 flex items-center justify-center shadow-md active:scale-95 transition-transform duration-150">
-          🛒
+          <!-- Past Orders -->
+          <router-link to="/past-orders"
+            class="bg-sky-200 text-slate-900 border border-sky-300 px-5 py-3 rounded-xl hover:bg-sky-300 active:scale-95 transition-transform duration-150">
+            Past Orders
+          </router-link>
 
-          <span v-if="itemCount > 0"
-            class="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">
-            {{ itemCount }}
-          </span>
-        </router-link>
+          <!-- Cart -->
+          <router-link to="/cart"
+            class="relative text-3xl bg-sky-100 hover:bg-sky-200 rounded-full w-14 h-14 flex items-center justify-center shadow-md active:scale-95 transition-transform duration-150">
+            🛒
+
+            <span v-if="itemCount > 0"
+              class="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+              {{ itemCount }}
+            </span>
+          </router-link>
+
+        </div>
+
       </header>
 
       <section class="bg-white rounded-2xl shadow-lg p-5 mb-8">

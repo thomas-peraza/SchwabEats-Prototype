@@ -117,6 +117,10 @@ function placeOrder() {
 
   localStorage.setItem('vendorOrders', JSON.stringify(existingOrders))
 
+  const existingPastOrders = JSON.parse(localStorage.getItem('employeePastOrders')) || []
+  existingPastOrders.unshift(newOrder)
+  localStorage.setItem('employeePastOrders', JSON.stringify(existingPastOrders))
+
   clearCart()
 
   router.push({

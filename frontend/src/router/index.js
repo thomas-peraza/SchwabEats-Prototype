@@ -11,6 +11,7 @@ import VendorDashboardView from '../views/VendorDashboardView.vue'
 import VendorOrdersView from '../views/VendorOrdersView.vue'
 import VendorMenuView from '../views/VendorMenuView.vue'
 import VendorReportsView from '../views/VendorReportsView.vue'
+import PastOrdersView from '../views/PastOrdersView.vue'
 
 const routes = [
   { path: '/', name: 'login', component: LoginView },
@@ -25,7 +26,8 @@ const routes = [
   { path: '/vendor-orders', name: 'vendor-orders', component: VendorOrdersView },
   { path: '/vendor-menu', name: 'vendor-menu', component: VendorMenuView },
   { path: '/vendor-reports', name: 'vendor-reports', component: VendorReportsView },
-  { path: '/', name: 'login', component: LoginView }
+  { path: '/', name: 'login', component: LoginView },
+  { path: '/past-orders', name: 'past-orders', component: PastOrdersView },
 ]
 
 const router = createRouter({

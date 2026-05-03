@@ -53,8 +53,8 @@
         </div>
 
         <div class="bg-white p-5 rounded-xl shadow-xl">
-          <h4 class="text-2xl mb-2">Ready for Pickup</h4>
-          <p class="text-3xl">{{ reports.readyForPickup }}</p>
+          <h4 class="text-2xl mb-2">Ready for Delivery</h4>
+          <p class="text-3xl">{{ reports.readyForDelivery }}</p>
         </div>
 
         <div class="bg-white p-5 rounded-xl shadow-xl">
@@ -98,7 +98,7 @@ const defaultMenuItems = [
 
 const reports = ref({
   ordersToday: 0,
-  readyForPickup: 0,
+  readyForDelivery: 0,
   revenue: 0
 })
 

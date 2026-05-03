@@ -181,6 +181,10 @@ function confirmComplete() {
 
   localStorage.setItem('vendorReports', JSON.stringify(currentReports))
 
+  const revenueHistory = JSON.parse(localStorage.getItem('vendorRevenueHistory')) || []
+  revenueHistory.push(currentReports.revenue)
+  localStorage.setItem('vendorRevenueHistory', JSON.stringify(revenueHistory))
+
   const currentItemSales = JSON.parse(localStorage.getItem('vendorItemSales')) || {}
 
   completedOrder.items.forEach((item) => {
