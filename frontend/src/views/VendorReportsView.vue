@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-white  text-[#4a4a4a]">
+  <div class="min-h-screen bg-white text-[#4a4a4a]">
     <div class="border border-[#1FABFF] bg-sky-700 rounded-sm">
       <div class="flex items-center justify-between px-4 py-3">
         <div>
@@ -11,12 +11,15 @@
     <div class="border-x border-b border-sky-200 bg-white px-4 py-3">
       <div class="flex items-start justify-between">
         <div>
-          <h2 class="text-3xl font-medium leading-none">Restaurant Name</h2>
+          <h2 class="text-3xl font-medium leading-none">Pasta Corner</h2>
           <p class="text-xl mt-1">Vendor Manager</p>
         </div>
 
-        <img src="https://images.unsplash.com/photo-1551782450-a2132b4ba21d?auto=format&fit=crop&w=300&q=80"
-          alt="Restaurant Logo" class="w-32 h-20 object-cover border-2 border-black" />
+        <img
+          :src="pastaLogo"
+          alt="Pasta Corner Logo"
+          class="w-32 h-20 object-cover border-2 border-black"
+        />
       </div>
     </div>
 
@@ -83,14 +86,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import pastaLogo from '@/assets/pasta-logo.avif'
 
 const defaultMenuItems = [
-  'Beef Taco Plate',
-  'Chicken Quesadilla',
-  'Chips and Guac',
-  'Grilled Chicken Bowl',
-  'Veggie Protein Bowl',
-  'Fruit Cup',
   'Chicken Alfredo',
   'Spaghetti Marinara',
   'Garlic Bread'
