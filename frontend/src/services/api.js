@@ -14,7 +14,13 @@ async function request(path, options = {}) {
   const payload = responseText ? JSON.parse(responseText) : null
 
   if (!response.ok) {
-    const error = new Error(payload?.error || 'Request failed')
+    const error = new Error(
+      payload?.error ||
+        payload?.reasons?.join(', ') ||
+        payload?.details ||
+        'Request failed'
+    )
+
     error.status = response.status
     error.details = payload
     throw error

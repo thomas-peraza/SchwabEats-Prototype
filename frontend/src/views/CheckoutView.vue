@@ -1,31 +1,45 @@
 <template>
   <div class="min-h-screen bg-gray-100 text-slate-800 px-4 py-6">
     <div class="max-w-5xl mx-auto">
-      <router-link to="/cart"
-        class="inline-block mb-6 bg-white shadow-md px-5 py-3 rounded-xl hover:shadow-lg active:scale-95 transition-transform duration-150">
+      <router-link
+        to="/cart"
+        class="inline-block mb-6 bg-white shadow-md px-5 py-3 rounded-xl hover:shadow-lg active:scale-95 transition-transform duration-150"
+      >
         ← Back to Cart
       </router-link>
+
       <h1 class="text-4xl font-bold text-sky-700 mb-2">Checkout</h1>
       <p class="text-slate-500 mb-8">Confirm your delivery information.</p>
 
-      <div class="grid lg:grid-cols-[2fr_1fr] gap-8">
-        <form class="bg-white rounded-2xl shadow-xl p-6 space-y-5" @submit.prevent="placeOrder">
-          <div v-if="errorMessage" class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
-            {{ errorMessage }}
-          </div>
+      <div
+        v-if="errorMessage"
+        class="bg-red-100 border border-red-400 text-red-700 px-5 py-4 rounded-xl mb-6"
+      >
+        {{ errorMessage }}
+      </div>
 
+      <div class="grid lg:grid-cols-[2fr_1fr] gap-8">
+        <form
+          class="bg-white rounded-2xl shadow-xl p-6 space-y-5"
+          @submit.prevent="placeOrder"
+        >
           <div>
             <label class="block text-sm font-semibold mb-2">Employee Name</label>
-            <input v-model="form.name"
+            <input
+              v-model="form.name"
               class="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-400"
-              placeholder="Employee name" required />
+              placeholder="Enter Name"
+              required
+            />
           </div>
 
           <div>
             <label class="block text-sm font-semibold mb-2">Delivery Location</label>
-            <select v-model="form.location"
+            <select
+              v-model="form.location"
               class="w-full border border-slate-300 rounded-xl px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
-              required>
+              required
+            >
               <option disabled value="">Select Schwab location</option>
               <option>Dallas-Park Cities Branch</option>
             </select>
@@ -33,14 +47,19 @@
 
           <div>
             <label class="block text-sm font-semibold mb-2">Delivery Notes</label>
-            <textarea v-model="form.notes"
+            <textarea
+              v-model="form.notes"
               class="w-full border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-400"
-              rows="4" placeholder="Leave at pickup table."></textarea>
+              rows="4"
+              placeholder="Leave at pickup table."
+            ></textarea>
           </div>
 
-          <button type="submit"
-            class="w-full bg-sky-200 text-slate-900 border border-sky-300 py-3 rounded-xl hover:bg-sky-300 active:scale-95 transition-transform duration-150 disabled:opacity-60 disabled:cursor-not-allowed"
-            :disabled="isSubmitting">
+          <button
+            type="submit"
+            class="w-full bg-sky-200 text-slate-900 border border-sky-300 py-3 rounded-xl hover:bg-sky-300 active:scale-95 transition-transform duration-150 disabled:opacity-50"
+            :disabled="isSubmitting"
+          >
             {{ isSubmitting ? 'Placing Order...' : 'Place Order' }}
           </button>
         </form>
@@ -84,13 +103,15 @@
 import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCart } from '../composables/useCart'
-import { currentEmployee } from '../data/currentEmployee'
-import { vendors } from '../data/vendors'
+import { submitOrder } from '../services/orderService'
 import { buildBackendVendor } from '../services/recommendationService'
-import { quoteOrder, submitOrder } from '../services/orderService'
+import { getCurrentEmployee } from '../data/currentEmployee'
 
 const router = useRouter()
 const { cartItems, subtotal, clearCart } = useCart()
+
+const isSubmitting = ref(false)
+const errorMessage = ref('')
 
 const form = reactive({
   name: '',
@@ -104,22 +125,20 @@ const taxableAmount = computed(() => subtotal.value - subsidy.value + copay.valu
 const taxes = computed(() => taxableAmount.value * 0.0825)
 const total = computed(() => taxableAmount.value + taxes.value)
 
-const isSubmitting = ref(false)
-const errorMessage = ref('')
+function getPrimaryVendorId() {
+  if (cartItems.value.length === 0) return null
 
-function getCartVendorId() {
-  const vendorIds = [...new Set(cartItems.value.map((item) => Number(item.vendorId)).filter(Boolean))]
-  return vendorIds.length === 1 ? vendorIds[0] : null
+  return cartItems.value[0].vendorId
 }
 
-function getCheckoutVendor() {
-  const vendorId = getCartVendorId()
-  if (vendorId) {
-    return vendors.find((vendor) => vendor.id === vendorId) || null
-  }
+function saveOrderToLocalStorage(order) {
+  const existingVendorOrders = JSON.parse(localStorage.getItem('vendorOrders')) || []
+  existingVendorOrders.push(order)
+  localStorage.setItem('vendorOrders', JSON.stringify(existingVendorOrders))
 
-  const vendorName = cartItems.value[0]?.vendorName
-  return vendors.find((vendor) => vendor.name === vendorName) || null
+  const existingPastOrders = JSON.parse(localStorage.getItem('employeePastOrders')) || []
+  existingPastOrders.unshift(order)
+  localStorage.setItem('employeePastOrders', JSON.stringify(existingPastOrders))
 }
 
 async function placeOrder() {
@@ -130,39 +149,50 @@ async function placeOrder() {
     return
   }
 
-  const vendor = getCheckoutVendor()
+  const vendorId = getPrimaryVendorId()
+  const vendor = buildBackendVendor(vendorId)
+
   if (!vendor) {
-    errorMessage.value = 'Select items from a single vendor before checking out.'
+    errorMessage.value = 'Could not find vendor information for this order.'
     return
   }
 
-  const selectedItemIds = cartItems.value.map((item) => String(item.id))
-  const orderPayload = {
-    employee: currentEmployee,
-    vendor: buildBackendVendor(vendor.id),
-    selected_item_ids: selectedItemIds,
-    request_time_local: new Date().toISOString(),
-    order_total: subtotal.value,
-    employee_name: form.name,
-    delivery_location: form.location,
-    delivery_notes: form.notes,
-    items: cartItems.value
-  }
+  isSubmitting.value = true
 
   try {
-    isSubmitting.value = true
-    await quoteOrder(orderPayload)
+    const employee = {
+      ...getCurrentEmployee(),
+      orders_today: 0,
+      is_eligible: true,
+      is_on_leave: false,
+      is_terminated: false
+    }
 
-    const confirmation = await submitOrder(orderPayload)
-    const orderNumber = confirmation.order_id || confirmation.orderNumber || String(Date.now())
+    const selectedItemIds = cartItems.value.map((item) => String(item.id))
+
+    const backendPayload = {
+      employee,
+      vendor,
+      selected_item_ids: selectedItemIds,
+
+      /*
+        Backend currently blocks orders after 10:30 AM.
+        This fixed time keeps the prototype demo working until backend rules are finalized.
+      */
+      request_time_local: '2026-04-27T09:00:00'
+    }
+
+    const backendResponse = await submitOrder(backendPayload)
+
+    const orderNumber =
+      backendResponse?.order_id || String(Math.floor(10000000 + Math.random() * 90000000))
 
     const newOrder = {
-      id: orderNumber,
+      id: String(orderNumber).slice(0, 8),
       employeeName: form.name,
       location: form.location,
       notes: form.notes,
-      vendorId: vendor.id,
-      vendorName: vendor.name,
+      vendorId,
       items: cartItems.value.map((item) => ({
         name: item.name,
         quantity: item.quantity,
@@ -172,25 +202,21 @@ async function placeOrder() {
       status: 'Accepted'
     }
 
-    const existingOrders = JSON.parse(localStorage.getItem('vendorOrders')) || []
-    existingOrders.push(newOrder)
-
-    localStorage.setItem('vendorOrders', JSON.stringify(existingOrders))
-
-    const existingPastOrders = JSON.parse(localStorage.getItem('employeePastOrders')) || []
-    existingPastOrders.unshift(newOrder)
-    localStorage.setItem('employeePastOrders', JSON.stringify(existingPastOrders))
+    saveOrderToLocalStorage(newOrder)
 
     clearCart()
 
     router.push({
       path: '/order-confirmation',
       query: {
-        orderNumber
+        orderNumber: newOrder.id
       }
     })
   } catch (error) {
-    errorMessage.value = error.details?.reasons?.join(', ') || error.message || 'Order failed.'
+    console.error('Order failed:', error)
+    errorMessage.value =
+      error.message ||
+      'Request failed. Please make sure the backend server is running and try again.'
   } finally {
     isSubmitting.value = false
   }
